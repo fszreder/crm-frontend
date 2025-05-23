@@ -16,7 +16,7 @@ export const ClientList = () => {
             </div>
             <div className="flex gap-2">
               <Button variant="outline">Edytuj</Button>
-              <Button variant="destructive">Usuń</Button>
+              <Button variant="destructive">Usuńa</Button>
             </div>
           </CardContent>
         </Card>
