@@ -1,14 +1,13 @@
-import { Routes, Route } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
-import Customers from './pages/Customers';
+// App.tsx
+import { Routes, Route } from "react-router-dom"
+import { HomePage } from "./homepage"
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/customers" element={<Customers />} />
+      <Route path="/" element={<HomePage />} />
     </Routes>
-  );
+  )
 }
 
-export default App;
+export default App
