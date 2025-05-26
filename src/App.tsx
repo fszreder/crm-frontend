@@ -1,13 +1,13 @@
 // App.tsx
-import { Routes, Route } from "react-router-dom"
-import { HomePage } from "./homepage"
+import { Routes, Route } from 'react-router-dom';
+import { HomePage } from './homepage';
 
 function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-    </Routes>
-  )
+    return (
+        <Routes>
+            <Route path="/" element={<HomePage />} />
+        </Routes>
+    );
 }
 
-export default App
+export default App;
