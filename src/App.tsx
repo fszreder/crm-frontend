@@ -1,13 +1,15 @@
 import { Routes, Route } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
-import Customers from './pages/Customers';
+import { HomePage } from './homepage';
+import ClientsPage from '@/pages/ClientsPage';
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Dashboard />} />
-      <Route path="/customers" element={<Customers />} />
-    </Routes>
+    <div className="p-8">
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/clients" element={<ClientsPage />} />
+      </Routes>
+    </div>
   );
 }
 
