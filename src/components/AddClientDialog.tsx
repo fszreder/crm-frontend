@@ -72,6 +72,8 @@ export const AddClientDialog = ({ isOpen, setIsOpen, onClientAdd }: AddClientDia
             email: trimmedEmail,
             phone: fullPhone,
             createdAt: new Date().toISOString().split('T')[0],
+            address: '',
+            notes: '',
         };
 
         onClientAdd(newClient);
@@ -84,7 +86,10 @@ export const AddClientDialog = ({ isOpen, setIsOpen, onClientAdd }: AddClientDia
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button className="hover:bg-gray-600 hover:text-white cursor-pointer transition-colors flex items-center gap-2">
+                <Button
+                    variant="outline"
+                    className="hover:bg-gray-600 hover:text-white cursor-pointer transition-colors flex items-center gap-2"
+                >
                     <Plus className="w-4 h-4" />
                     Dodaj klienta
                 </Button>

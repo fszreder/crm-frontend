@@ -1,46 +1,79 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { mockClients } from "../data/mockClients";
+import { Button } from '@/components/ui/button';
+import { CustomerInfoCard } from '@/components/customerdetail/CustomerInfoCard';
+import { useClientDetail } from '@/hooks/useClientDetail';
+import { Pencil, ArrowLeft, Trash2 } from 'lucide-react';
+import {
+    AlertDialog,
+    AlertDialogTrigger,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogFooter,
+    AlertDialogCancel,
+    AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 
 const CustomerDetail = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const client = mockClients.find((c) => c.id.toString() === id);
+    const { client, handleDelete, handleEdit, handleBack } = useClientDetail();
 
-  if (!client) {
-    return <p className="p-6 text-red-600">Nie znaleziono klienta.</p>;
-  }
-
-  const handleDelete = () => {
-    const confirmed = window.confirm("Czy na pewno chcesz usunąć tego klienta?");
-    if (confirmed) {
-      const index = mockClients.findIndex((c) => c.id === client.id);
-      if (index !== -1) mockClients.splice(index, 1);
-      console.log("🗑️ Usunięto klienta:", client.id);
-      navigate("/customers");
+    if (!client) {
+        return <p className="p-6 text-red-600">Nie znaleziono klienta.</p>;
     }
-  };
 
-  return (
-    <div className="p-6">
-      <Card>
-        <CardContent className="p-4 space-y-2">
-          <h2 className="text-xl font-bold">{client.name}</h2>
-          <p>Email: {client.email}</p>
-          <p>Telefon: {client.phone}</p>
-          <p>Adres: {client.address}</p>
-          <p>Notatki: {client.notes}</p>
-        </CardContent>
-      </Card>
+    return (
+        <div className="p-6">
+            <CustomerInfoCard client={client} />
 
-      <div className="mt-4 flex gap-2">
-        <Button onClick={() => navigate(`/customers/${client.id}/edit`)}>Edytuj klienta</Button>
-        <Button variant="outline" onClick={() => navigate("/customers")}>Wróć do listy</Button>
-        <Button variant="destructive" onClick={handleDelete}>Usuń klienta</Button>
-      </div>
-    </div>
-  );
+            <div className="mt-4 flex gap-2">
+                <Button
+                    className="hover:bg-gray-600 hover:text-white cursor-pointer transition-colors flex items-center gap-2"
+                    onClick={handleEdit}
+                    variant="outline"
+                >
+                    <Pencil size={16} />
+                    Edytuj klienta
+                </Button>
+                <Button
+                    className="hover:bg-gray-600 hover:text-white cursor-pointer transition-colors flex items-center gap-2"
+                    onClick={handleBack}
+                    variant="outline"
+                >
+                    <ArrowLeft size={16} />
+                    Wróć do listy
+                </Button>
+
+                <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <Button
+                            variant="destructive"
+                            className="hover:bg-red-600 bg-red-500 hover:text-white cursor-pointer transition-colors flex items-center gap-2"
+                        >
+                            <Trash2 size={16} />
+                            Usuń klienta
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>
+                                Czy na pewno chcesz usunąć tego klienta?
+                            </AlertDialogTitle>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel className="hover:bg-gray-600 hover:text-white transition-colors cursor-pointer">
+                                Anuluj
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                                className="bg-red-500 text-white hover:bg-red-600 transition-colors cursor-pointer"
+                                onClick={handleDelete}
+                            >
+                                Usuń
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            </div>
+        </div>
+    );
 };
 
 export default CustomerDetail;
