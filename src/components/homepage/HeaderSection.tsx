@@ -1,8 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { AddClientDialog } from '@/components/AddClientDialog';
 import type { Client } from '@/data/mockClients';
-import { useNavigate } from 'react-router-dom'; // <- dodaj to
-
+import { useNavigate } from 'react-router-dom';
 interface Props {
     isDialogOpen: boolean;
     setIsDialogOpen: (open: boolean) => void;
@@ -26,7 +25,14 @@ export const HeaderSection = ({ isDialogOpen, setIsDialogOpen, onClientAdd }: Pr
                     className="hover:bg-gray-600 hover:text-white cursor-pointer transition-colors flex items-center gap-2"
                     onClick={() => navigate('/clientList')}
                 >
-                    Zobacz listę
+                    Zobacz listę klientów
+                </Button>
+                <Button
+                    variant="outline"
+                    className="hover:bg-gray-600 hover:text-white cursor-pointer transition-colors flex items-center gap-2"
+                    onClick={() => navigate('/ServiceList')}
+                >
+                    Przejdź do listy usług
                 </Button>
             </div>
         </div>
