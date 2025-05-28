@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { CountryCodeCombobox } from '@/components/CountryCodeCombobox';
+import { CountryCodeCombobox } from '@/components/homepage/CountryCodeCombobox';
 import { cn } from '@/lib/utils';
 
 interface Props {

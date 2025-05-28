@@ -22,7 +22,7 @@ export const ClientList = () => {
         <div className="p-6">
             <div className="flex justify-between items-center mb-4">
                 <Button
-                    className="hover:bg-gray-600 hover:text-white cursor-pointer transition-colors flex items-center gap-2"
+                    className="cursor-pointer self-start text-sm text-gray-600 hover:text-black transition-colors"
                     variant="outline"
                     onClick={() => navigate('/homepage')}
                 >

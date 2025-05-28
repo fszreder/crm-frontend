@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { AddClientDialog } from '@/components/AddClientDialog';
+import { AddClientDialog } from '@/components/homepage/AddClientDialog';
 import type { Client } from '@/data/mockClients';
 import { useNavigate } from 'react-router-dom';
 interface Props {

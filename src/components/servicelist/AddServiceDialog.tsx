@@ -69,7 +69,7 @@ export const AddServiceDialog = ({ onAdd, nextId }: Props) => {
                         <Input value={price} onChange={(e) => setPrice(e.target.value)} />
                     </div>
                 </div>
-                <DialogFooter>
+                <DialogFooter className="flex justify-between">
                     <Button onClick={handleSubmit}>Dodaj</Button>
                 </DialogFooter>
             </DialogContent>
