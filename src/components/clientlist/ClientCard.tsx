@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { CustomerInfoCard } from '@/components/customerdetail/CustomerInfoCard';
-import { useClientDetail } from '@/hooks/useClientDetail';
-import { Pencil, ArrowLeft, Trash2 } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import type { Client } from '@/data/mockClients';
 import {
     AlertDialog,
     AlertDialogTrigger,
@@ -12,47 +11,44 @@ import {
     AlertDialogCancel,
     AlertDialogAction,
 } from '@/components/ui/alert-dialog';
+import { Trash2 } from 'lucide-react';
 
-const CustomerDetail = () => {
-    const { client, handleDelete, handleEdit, handleBack } = useClientDetail();
+interface ClientCardProps {
+    client: Client;
+    onDetails: (id: number) => void;
+    onDelete: (id: number) => void;
+}
 
-    if (!client) {
-        return <p className="p-6 text-red-600">Nie znaleziono klienta.</p>;
-    }
-
-    return (
-        <div className="p-6">
-            <CustomerInfoCard client={client} />
-
-            <div className="mt-4 flex gap-2">
+export const ClientCard = ({ client, onDetails, onDelete }: ClientCardProps) => (
+    <Card className="transition-colors duration-300 hover:bg-gray-100">
+        <CardContent className="p-4 flex justify-between items-center">
+            <div>
+                <div className="font-semibold text-lg">{client.name}</div>
+                <div className="text-sm text-gray-500">{client.email}</div>
+                <div className="text-sm text-gray-500">{client.phone}</div>
+                <div className="text-sm text-gray-500">{client.address}</div>
+                <div className="text-sm text-gray-500">{client.notes}</div>
+            </div>
+            <div className="flex gap-2">
                 <Button
                     className="hover:bg-gray-600 hover:text-white cursor-pointer transition-colors flex items-center gap-2"
-                    onClick={handleEdit}
                     variant="outline"
+                    onClick={() => onDetails(client.id)}
                 >
-                    <Pencil size={16} />
-                    Edytuj klienta
-                </Button>
-                <Button
-                    className="hover:bg-gray-600 hover:text-white cursor-pointer transition-colors flex items-center gap-2"
-                    onClick={handleBack}
-                    variant="outline"
-                >
-                    <ArrowLeft size={16} />
-                    Wróć do listy
+                    Szczegóły
                 </Button>
 
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
                         <Button
                             variant="destructive"
-                            className="hover:bg-red-600 bg-red-500 hover:text-white cursor-pointer transition-colors flex items-center gap-2"
+                            className="cursor-pointer bg-red-500 text-white hover:bg-red-600 flex items-center gap-2"
                         >
                             <Trash2 size={16} />
-                            Usuń klienta
+                            Usuń
                         </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent>
+                    <AlertDialogContent className="bg-white">
                         <AlertDialogHeader>
                             <AlertDialogTitle>
                                 Czy na pewno chcesz usunąć tego klienta?
@@ -64,7 +60,7 @@ const CustomerDetail = () => {
                             </AlertDialogCancel>
                             <AlertDialogAction
                                 className="bg-red-500 text-white hover:bg-red-600 transition-colors cursor-pointer"
-                                onClick={handleDelete}
+                                onClick={() => onDelete(client.id)}
                             >
                                 Usuń
                             </AlertDialogAction>
@@ -72,8 +68,6 @@ const CustomerDetail = () => {
                     </AlertDialogContent>
                 </AlertDialog>
             </div>
-        </div>
-    );
-};
-
-export default CustomerDetail;
+        </CardContent>
+    </Card>
+);
