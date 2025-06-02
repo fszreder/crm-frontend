@@ -3,4 +3,6 @@ export interface Service {
     name: string;
     description: string;
     price: string;
+    clientId: number;
+    vehicleModel: string;
 }

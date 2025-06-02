@@ -49,7 +49,14 @@ export const CountryCodeCombobox = ({ value, onChange }: Props) => {
             <PopoverContent className="w-60 p-0 bg-white border-gray-200">
                 <Command>
                     <div className="sticky top-0 z-10 bg-white px-1 py-1">
-                        <CommandInput placeholder="Szukaj kraju..." />
+                        <CommandInput
+                            placeholder="Szukaj kraju..."
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.stopPropagation();
+                                }
+                            }}
+                        />
                     </div>
                     <CommandEmpty>Nie znaleziono kraju.</CommandEmpty>
                     <CommandGroup

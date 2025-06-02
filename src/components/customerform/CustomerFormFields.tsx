@@ -31,7 +31,7 @@ export const CustomerFormFields = ({
         rawPhone: '',
     });
 
-    const validateField = (name: string, value: string) => {
+    const validateField = (name: string, value: string): string => {
         switch (name) {
             case 'name':
                 return value.trim().length >= 3 ? '' : 'Imię musi mieć co najmniej 3 znaki.';
@@ -40,9 +40,30 @@ export const CustomerFormFields = ({
                     ? ''
                     : 'Nieprawidłowy e-mail.';
             case 'rawPhone':
-                return /^\d{6,15}$/.test(value.trim()) ? '' : 'Nieprawidłowy numer telefonu.';
+                return /^\d{6,15}$/.test(value) ? '' : 'Nieprawidłowy numer telefonu.';
             default:
                 return '';
+        }
+    };
+
+    const validateAll = (): boolean => {
+        const nameError = validateField('name', formData.name);
+        const emailError = validateField('email', formData.email);
+        const phoneError = validateField('rawPhone', formData.rawPhone);
+
+        setFormErrors({
+            name: nameError,
+            email: emailError,
+            rawPhone: phoneError,
+        });
+
+        return !nameError && !emailError && !phoneError;
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (validateAll()) {
+            onSubmit(e);
         }
     };
 
@@ -57,7 +78,8 @@ export const CustomerFormFields = ({
     };
 
     return (
-        <form onSubmit={onSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
+            <button type="submit" className="hidden" aria-hidden="true" />
             <div>
                 <input
                     type="text"
@@ -99,7 +121,17 @@ export const CustomerFormFields = ({
                         name="rawPhone"
                         placeholder="123456789"
                         value={formData.rawPhone}
-                        onChange={onChange}
+                        onChange={(e) => {
+                            const noSpaces = e.target.value.replace(/\s/g, '');
+                            onChange({
+                                ...e,
+                                target: {
+                                    ...e.target,
+                                    value: noSpaces,
+                                    name: 'rawPhone',
+                                },
+                            });
+                        }}
                         onBlur={handleBlur}
                         className={cn('w-full border p-2', formErrors.rawPhone && 'border-red-500')}
                     />
@@ -130,7 +162,7 @@ export const CustomerFormFields = ({
                 <Button
                     variant="outline"
                     type="submit"
-                    className="hover:bg-gray-600 hover:text-white transition-colors"
+                    className="hover:bg-blue-600 cursor-pointer hover:text-white transition-colors"
                 >
                     {isEditing ? 'Zapisz zmiany' : 'Dodaj klienta'}
                 </Button>
@@ -138,7 +170,7 @@ export const CustomerFormFields = ({
                     variant="outline"
                     type="button"
                     onClick={onCancel}
-                    className="hover:bg-gray-600 hover:text-white transition-colors"
+                    className="hover:bg-gray-600 cursor-pointer hover:text-white transition-colors"
                 >
                     Anuluj
                 </Button>

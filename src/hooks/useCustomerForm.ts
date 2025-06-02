@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { mockClients } from '@/data/mockClients';
 import { toast } from 'sonner';
 
 export const useCustomerForm = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [formData, setFormData] = useState({
         name: '',
@@ -15,6 +16,7 @@ export const useCustomerForm = () => {
         address: '',
         notes: '',
     });
+
     const [formErrors, setFormErrors] = useState({
         name: '',
         email: '',
@@ -109,28 +111,23 @@ export const useCustomerForm = () => {
             const index = mockClients.findIndex((c) => c.id.toString() === id);
             if (index !== -1) {
                 mockClients[index] = newClient;
-                console.log('✅ Zaktualizowano klienta:', newClient);
-            }
-        } else {
-            mockClients.push(newClient);
-            console.log('✅ Dodano klienta:', newClient);
-        }
-
-        navigate('/clientList');
-        if (id) {
-            const index = mockClients.findIndex((c) => c.id.toString() === id);
-            if (index !== -1) {
-                mockClients[index] = newClient;
                 toast.success('Klient zaktualizowany');
             }
         } else {
             mockClients.push(newClient);
             toast.success('Klient dodany');
         }
+
+        navigate('/clientList');
     };
 
     const handleCancel = () => {
-        navigate('/clientList');
+        const from = location.state?.from;
+        if (from === 'homepage') {
+            navigate('/homepage');
+        } else {
+            navigate('/clientList');
+        }
     };
 
     return {

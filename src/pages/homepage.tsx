@@ -9,24 +9,19 @@ import { AboutSection } from '@/components/homepage/AboutSection';
 import { ClientSearch } from '@/components/clientsearch/ClientSearch';
 import { useClientSearch } from '@/hooks/useClientSearch';
 import { useClientStats } from '@/hooks/useClientStats';
+import { useNavigate } from 'react-router-dom';
+
 export const HomePage = () => {
-    const [clients, setClients] = useState<Client[]>(mockClients);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [clients] = useState<Client[]>(mockClients);
+    const navigate = useNavigate();
 
     const { searchTerm, setSearchTerm, filteredClients } = useClientSearch(clients);
     const { clientsWithDates, chartData } = useClientStats(clients);
 
-    const handleClientAdd = (newClient: Client) => {
-        setClients([...clients, newClient]);
-        setIsDialogOpen(false);
-    };
-
     return (
         <div className="max-w-5xl mx-auto px-4 py-10 space-y-10">
             <HeaderSection
-                isDialogOpen={isDialogOpen}
-                setIsDialogOpen={setIsDialogOpen}
-                onClientAdd={handleClientAdd}
+                onAddClientClick={() => navigate('/customers/new', { state: { from: 'homepage' } })}
             />
 
             <AboutSection />
@@ -46,6 +41,7 @@ export const HomePage = () => {
                     }))}
                 />
             </div>
+
             <ClientsChart data={chartData} />
         </div>
     );

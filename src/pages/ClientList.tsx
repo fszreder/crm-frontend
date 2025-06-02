@@ -2,7 +2,9 @@ import { Button } from '@/components/ui/button';
 import { ClientCard } from '@/components/clientlist/ClientCard';
 import { ClientListControls } from '@/components/clientlist/ClientListControls';
 import { useClientList } from '@/hooks/useClientList';
+import { useClientServices } from '@/hooks/useClientServices';
 import { useNavigate } from 'react-router-dom';
+import { AddServiceDialog } from '@/components/clientlist/AddServiceDialog';
 
 export const ClientList = () => {
     const navigate = useNavigate();
@@ -17,6 +19,8 @@ export const ClientList = () => {
         dateFilter,
         setDateFilter,
     } = useClientList();
+
+    const { services, selectedClientId, setSelectedClientId, addService } = useClientServices();
 
     return (
         <div className="p-6">
@@ -49,8 +53,18 @@ export const ClientList = () => {
                         client={client}
                         onDetails={handleDetails}
                         onDelete={handleDelete}
+                        onAddService={(id) => setSelectedClientId(id)}
+                        services={services}
                     />
                 ))}
+                {selectedClientId !== null && (
+                    <AddServiceDialog
+                        clientId={selectedClientId}
+                        onAdd={addService}
+                        onClose={() => setSelectedClientId(null)}
+                        nextId={services.length + 1}
+                    />
+                )}
             </div>
         </div>
     );
