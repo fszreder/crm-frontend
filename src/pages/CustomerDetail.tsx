@@ -6,6 +6,7 @@ import { Pencil, ArrowLeft, Trash2 } from 'lucide-react';
 import { addServiceToClient } from '@/lib/customerService';
 import type { Service } from '@/types/service';
 import { AddServiceDialog } from '@/components/clientlist/AddServiceDialog';
+import { motion } from 'framer-motion';
 
 import {
     AlertDialog,
@@ -45,7 +46,13 @@ const CustomerDetail = () => {
     }
 
     return (
-        <div className="p-6 space-y-6">
+        <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            transition={{ duration: 0.5 }}
+            className="p-6 space-y-6"
+        >
             <CustomerInfoCard client={localClient} />
 
             <div className="flex gap-2 flex-wrap">
@@ -134,7 +141,7 @@ const CustomerDetail = () => {
                     onClose={() => setShowDialog(false)}
                 />
             )}
-        </div>
+        </motion.div>
     );
 };
 

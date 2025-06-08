@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { deleteCustomer, addServiceToClient } from '@/lib/customerService';
 import { toast } from 'sonner';
 import type { Service } from '@/types/service';
+import { motion } from 'framer-motion';
 
 interface Props {
     onClientChanged?: () => void;
@@ -56,7 +57,13 @@ export const ClientList = ({ onClientChanged }: Props) => {
     };
 
     return (
-        <div className="p-6">
+        <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            transition={{ duration: 0.5 }}
+            className="p-6"
+        >
             <div className="flex justify-between items-center mb-4">
                 <Button
                     className="cursor-pointer self-start text-sm text-gray-600 hover:text-black transition-colors"
@@ -99,6 +106,6 @@ export const ClientList = ({ onClientChanged }: Props) => {
                     />
                 )}
             </div>
-        </div>
+        </motion.div>
     );
 };
