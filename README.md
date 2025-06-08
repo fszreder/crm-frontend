@@ -1,54 +1,120 @@
-# React + TypeScript + Vite
+# CRM System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern Customer Relationship Management (CRM) system built with React, TypeScript, and Node.js. This project consists of a frontend and backend application that work together to provide a complete CRM solution.
 
-Currently, two official plugins are available:
+## Project Structure
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The project is divided into two main parts:
 
-## Expanding the ESLint configuration
+- `crm-frontend/`: React-based frontend application
+- `crm-backend/`: Node.js/Express backend server
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Frontend (crm-frontend)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+The frontend is built with:
+- React 19
+- TypeScript
+- Vite
+- TailwindCSS
+- Radix UI components
+- React Router DOM
+- Axios for API calls
+- Recharts for data visualization
+
+### Frontend Setup
+
+1. Navigate to the frontend directory:
+```bash
+cd crm-frontend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+2. Install dependencies:
+```bash
+npm install
 ```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+4. Build for production:
+```bash
+npm run build
+```
+
+## Backend (crm-backend)
+
+The backend is built with:
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- JWT for authentication
+- bcryptjs for password hashing
+
+### Backend Setup
+
+1. Navigate to the backend directory:
+```bash
+cd crm-backend
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Create a `.env` file in the backend directory with the following variables:
+```
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+PORT=5000
+```
+
+4. Start the development server:
+```bash
+npm run dev
+```
+
+## Features
+
+- User authentication and authorization
+- Customer management
+- Modern and responsive UI
+- Real-time data updates
+- Secure API endpoints
+- Data visualization
+- Form validation
+- Error handling
+
+## Development
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm (v9 or higher)
+- MongoDB
+
+### Running the Project
+
+1. Start the backend server:
+```bash
+cd crm-backend
+npm run dev
+```
+
+2. In a new terminal, start the frontend development server:
+```bash
+cd crm-frontend
+npm run dev
+```
+
+The frontend will be available at `http://localhost:5173` and the backend at `http://localhost:5000`.
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
