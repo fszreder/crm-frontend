@@ -1,5 +1,5 @@
 import { parseISO, format } from 'date-fns';
-import type { Client } from '@/data/mockClients';
+import type { Client } from '@/types/client';
 
 interface ChartDataPoint {
     date: string;

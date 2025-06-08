@@ -5,11 +5,14 @@ import { cn } from '@/lib/utils';
 
 interface Props {
     formData: {
-        name: string;
+        firstName: string;
+        lastName: string;
         email: string;
         countryCode: string;
         rawPhone: string;
-        address: string;
+        street: string;
+        city: string;
+        zip: string;
         notes: string;
     };
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
@@ -26,15 +29,17 @@ export const CustomerFormFields = ({
     isEditing,
 }: Props) => {
     const [formErrors, setFormErrors] = useState({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         rawPhone: '',
     });
 
     const validateField = (name: string, value: string): string => {
         switch (name) {
-            case 'name':
-                return value.trim().length >= 3 ? '' : 'Imię musi mieć co najmniej 3 znaki.';
+            case 'firstName':
+            case 'lastName':
+                return value.trim().length >= 2 ? '' : 'Musi mieć co najmniej 2 znaki.';
             case 'email':
                 return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
                     ? ''
@@ -47,17 +52,14 @@ export const CustomerFormFields = ({
     };
 
     const validateAll = (): boolean => {
-        const nameError = validateField('name', formData.name);
-        const emailError = validateField('email', formData.email);
-        const phoneError = validateField('rawPhone', formData.rawPhone);
-
-        setFormErrors({
-            name: nameError,
-            email: emailError,
-            rawPhone: phoneError,
-        });
-
-        return !nameError && !emailError && !phoneError;
+        const errors = {
+            firstName: validateField('firstName', formData.firstName),
+            lastName: validateField('lastName', formData.lastName),
+            email: validateField('email', formData.email),
+            rawPhone: validateField('rawPhone', formData.rawPhone),
+        };
+        setFormErrors(errors);
+        return !errors.firstName && !errors.lastName && !errors.email && !errors.rawPhone;
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -79,18 +81,39 @@ export const CustomerFormFields = ({
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
-            <button type="submit" className="hidden" aria-hidden="true" />
-            <div>
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Imię i nazwisko"
-                    value={formData.name}
-                    onChange={onChange}
-                    onBlur={handleBlur}
-                    className={cn('w-full border p-2', formErrors.name && 'border-red-500')}
-                />
-                {formErrors.name && <p className="text-red-500 text-sm">{formErrors.name}</p>}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <input
+                        type="text"
+                        name="firstName"
+                        placeholder="Imię"
+                        value={formData.firstName}
+                        onChange={onChange}
+                        onBlur={handleBlur}
+                        className={cn(
+                            'w-full border p-2',
+                            formErrors.firstName && 'border-red-500'
+                        )}
+                    />
+                    {formErrors.firstName && (
+                        <p className="text-red-500 text-sm">{formErrors.firstName}</p>
+                    )}
+                </div>
+
+                <div>
+                    <input
+                        type="text"
+                        name="lastName"
+                        placeholder="Nazwisko"
+                        value={formData.lastName}
+                        onChange={onChange}
+                        onBlur={handleBlur}
+                        className={cn('w-full border p-2', formErrors.lastName && 'border-red-500')}
+                    />
+                    {formErrors.lastName && (
+                        <p className="text-red-500 text-sm">{formErrors.lastName}</p>
+                    )}
+                </div>
             </div>
 
             <div>
@@ -141,14 +164,33 @@ export const CustomerFormFields = ({
                 </div>
             </div>
 
-            <input
-                className="w-full border p-2"
-                type="text"
-                name="address"
-                placeholder="Adres"
-                value={formData.address}
-                onChange={onChange}
-            />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <input
+                    className="w-full border p-2"
+                    type="text"
+                    name="street"
+                    placeholder="Ulica"
+                    value={formData.street}
+                    onChange={onChange}
+                />
+                <input
+                    className="w-full border p-2"
+                    type="text"
+                    name="zip"
+                    placeholder="Kod pocztowy"
+                    value={formData.zip}
+                    onChange={onChange}
+                />
+                <input
+                    className="w-full border p-2"
+                    type="text"
+                    name="city"
+                    placeholder="Miasto"
+                    value={formData.city}
+                    onChange={onChange}
+                />
+            </div>
+
             <textarea
                 className="w-full border p-2"
                 name="notes"

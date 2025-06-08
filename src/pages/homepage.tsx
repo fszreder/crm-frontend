@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { mockClients } from '@/data/mockClients';
-import type { Client } from '@/data/mockClients';
+import { useEffect, useState } from 'react';
+import { getCustomers } from '@/lib/customerService';
+import type { Client } from '@/types/client';
 import { HeaderSection } from '@/components/homepage/HeaderSection';
 import { StatsCard } from '@/components/homepage/StatsCard';
 import { RecentClientsCard } from '@/components/homepage/RecentClientsCard';
@@ -12,10 +12,18 @@ import { useClientStats } from '@/hooks/useClientStats';
 import { useNavigate } from 'react-router-dom';
 
 export const HomePage = () => {
-    const [clients] = useState<Client[]>(mockClients);
+    const [clients, setClients] = useState<Client[]>([]);
+
+    useEffect(() => {
+        getCustomers()
+            .then(setClients)
+            .catch((err: unknown) => console.error('Błąd ładowania klientów', err));
+    }, []);
+
     const navigate = useNavigate();
 
     const { searchTerm, setSearchTerm, filteredClients } = useClientSearch(clients);
+
     const { clientsWithDates, chartData } = useClientStats(clients);
 
     return (
@@ -37,7 +45,10 @@ export const HomePage = () => {
                 <RecentClientsCard
                     clients={clientsWithDates.map((client) => ({
                         ...client,
-                        createdAt: client.createdAt.toISOString(),
+                        createdAt:
+                            client.createdAt instanceof Date
+                                ? client.createdAt.toISOString()
+                                : client.createdAt,
                     }))}
                 />
             </div>

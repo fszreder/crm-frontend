@@ -1,53 +1,62 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { mockClients } from '@/data/mockClients';
 import { toast } from 'sonner';
+import { getCustomerById, createCustomer, updateCustomer } from '@/lib/customerService';
 
 export const useCustomerForm = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
 
+    const isEditing = Boolean(id);
+
     const [formData, setFormData] = useState({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         countryCode: '+48',
         rawPhone: '',
-        address: '',
+        street: '',
+        city: '',
+        zip: '',
         notes: '',
     });
 
     const [formErrors, setFormErrors] = useState({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         rawPhone: '',
     });
 
-    const isEditing = Boolean(id);
-
     useEffect(() => {
         if (id) {
-            const client = mockClients.find((c) => c.id.toString() === id);
-            if (client) {
-                const countryCode = client.phone.slice(0, 3);
-                const rawPhone = client.phone.slice(3);
+            getCustomerById(id).then((client) => {
+                if (client) {
+                    const code = client.phone.slice(0, 3);
+                    const raw = client.phone.slice(3);
 
-                setFormData({
-                    name: client.name,
-                    email: client.email,
-                    countryCode,
-                    rawPhone,
-                    address: client.address,
-                    notes: client.notes,
-                });
-            }
+                    setFormData({
+                        firstName: client.firstName,
+                        lastName: client.lastName,
+                        email: client.email,
+                        countryCode: code,
+                        rawPhone: raw,
+                        street: client.address.street,
+                        city: client.address.city,
+                        zip: client.address.zip,
+                        notes: client.notes,
+                    });
+                }
+            });
         }
     }, [id]);
 
     const validateField = (name: string, value: string) => {
         switch (name) {
-            case 'name':
-                return value.trim().length >= 3 ? '' : 'Imię musi mieć co najmniej 3 znaki.';
+            case 'firstName':
+            case 'lastName':
+                return value.trim().length >= 2 ? '' : 'Imię i nazwisko muszą mieć min. 2 znaki.';
             case 'email':
                 return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
                     ? ''
@@ -68,66 +77,44 @@ export const useCustomerForm = () => {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const trimmedName = formData.name.trim();
-        const trimmedEmail = formData.email.trim();
-        const trimmedPhone = formData.rawPhone.trim();
-        const fullPhone = `${formData.countryCode}${trimmedPhone}`;
-
-        const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail);
-        const isPhoneValid = /^\d{6,15}$/.test(trimmedPhone);
-        const isNameValid = trimmedName.length >= 3;
-
-        if (!isNameValid) {
-            toast.error('Imię i nazwisko musi mieć co najmniej 3 znaki.');
-            return;
-        }
-        if (!isEmailValid) {
-            toast.error('Podaj poprawny adres e-mail.');
-            return;
-        }
-
-        if (!isPhoneValid) {
-            toast.error('Numer telefonu musi zawierać od 6 do 15 cyfr.');
-            return;
-        }
+        const fullPhone = `${formData.countryCode}${formData.rawPhone.trim()}`;
 
         const newClient = {
-            id: id ? Number(id) : Date.now(),
-            name: trimmedName,
-            email: trimmedEmail,
+            firstName: formData.firstName.trim(),
+            lastName: formData.lastName.trim(),
+            email: formData.email.trim(),
             phone: fullPhone,
-            address: formData.address,
+            address: {
+                street: formData.street,
+                city: formData.city,
+                zip: formData.zip,
+            },
             notes: formData.notes,
-            createdAt: id
-                ? (mockClients.find((c) => c.id.toString() === id)?.createdAt ??
-                  new Date().toISOString().split('T')[0])
-                : new Date().toISOString().split('T')[0],
         };
 
-        if (id) {
-            const index = mockClients.findIndex((c) => c.id.toString() === id);
-            if (index !== -1) {
-                mockClients[index] = newClient;
+        try {
+            if (isEditing && id) {
+                await updateCustomer(id, newClient);
                 toast.success('Klient zaktualizowany');
+            } else {
+                await createCustomer(newClient);
+                toast.success('Klient dodany');
             }
-        } else {
-            mockClients.push(newClient);
-            toast.success('Klient dodany');
-        }
 
-        navigate('/clientList');
+            const from = location.state?.from;
+            navigate(from === 'homepage' ? '/homepage' : '/clientList');
+        } catch (err) {
+            toast.error('Błąd zapisu klienta');
+            console.error(err);
+        }
     };
 
     const handleCancel = () => {
         const from = location.state?.from;
-        if (from === 'homepage') {
-            navigate('/homepage');
-        } else {
-            navigate('/clientList');
-        }
+        navigate(from === 'homepage' ? '/homepage' : '/clientList');
     };
 
     return {

@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { CustomerInfoCard } from '@/components/customerdetail/CustomerInfoCard';
 import { useClientDetail } from '@/hooks/useClientDetail';
 import { Pencil, ArrowLeft, Trash2 } from 'lucide-react';
+import { addServiceToClient } from '@/lib/customerService';
 import type { Service } from '@/types/service';
 import { AddServiceDialog } from '@/components/clientlist/AddServiceDialog';
 
@@ -19,22 +20,33 @@ import {
 
 const CustomerDetail = () => {
     const { client, handleDelete, handleEdit, handleBack } = useClientDetail();
-
-    const [services, setServices] = useState<Service[]>([]);
     const [showDialog, setShowDialog] = useState(false);
+    const [localClient, setLocalClient] = useState(client);
 
-    const handleAddService = (service: Service) => {
-        setServices((prev) => [...prev, service]);
-        setShowDialog(false);
+    useEffect(() => {
+        if (client) {
+            setLocalClient(client);
+        }
+    }, [client]);
+
+    const handleAddService = async (service: Service) => {
+        if (!localClient) return;
+        try {
+            const updatedClient = await addServiceToClient(localClient._id, service);
+            setLocalClient(updatedClient);
+            setShowDialog(false);
+        } catch (err) {
+            console.error('Błąd podczas dodawania usługi', err);
+        }
     };
 
-    if (!client) {
+    if (!localClient) {
         return <p className="p-6 text-red-600">Nie znaleziono klienta.</p>;
     }
 
     return (
         <div className="p-6 space-y-6">
-            <CustomerInfoCard client={client} />
+            <CustomerInfoCard client={localClient} />
 
             <div className="flex gap-2 flex-wrap">
                 <Button
@@ -91,26 +103,35 @@ const CustomerDetail = () => {
                 </AlertDialog>
             </div>
 
-            {services.length > 0 && (
+            {localClient.services.length > 0 && (
                 <div>
                     <h2 className="text-xl font-bold mb-2">Historia usług</h2>
                     <ul className="space-y-2">
-                        {services.map((service) => (
-                            <li key={service.id} className="border rounded-md p-3 shadow-sm">
+                        {localClient.services.map((service, index) => (
+                            <li key={index} className="border rounded-md p-3 shadow-sm">
                                 <strong>{service.name}</strong> – {service.vehicleModel} –{' '}
                                 {service.price} zł
-                                <div className="text-sm text-gray-500">{service.description}</div>
+                                {service.date && (
+                                    <div className="text-sm text-gray-500">
+                                        Data: {new Date(service.date).toLocaleDateString()}
+                                    </div>
+                                )}
                             </li>
                         ))}
                     </ul>
                 </div>
             )}
+
             {showDialog && (
                 <AddServiceDialog
-                    clientId={client.id}
+                    clientId={Number(localClient._id)}
+                    nextId={
+                        localClient.services && localClient.services.length > 0
+                            ? localClient.services.length + 1
+                            : 1
+                    }
                     onAdd={handleAddService}
                     onClose={() => setShowDialog(false)}
-                    nextId={services.length + 1}
                 />
             )}
         </div>

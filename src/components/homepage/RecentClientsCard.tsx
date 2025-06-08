@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import type { Client } from '@/data/mockClients';
+import type { Client } from '@/types/client';
 
 interface Props {
     clients: Client[];
@@ -13,8 +13,8 @@ export const RecentClientsCard = ({ clients }: Props) => (
                 .slice(-3)
                 .reverse()
                 .map((client) => (
-                    <div key={client.id} className="text-sm">
-                        {client.name}
+                    <div key={client._id} className="text-sm">
+                        {client.firstName} {client.lastName}
                     </div>
                 ))}
         </CardContent>

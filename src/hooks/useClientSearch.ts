@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import type { Client } from '@/data/mockClients';
+import type { Client } from '@/types/client';
 
 export const useClientSearch = (clients: Client[]) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -7,21 +7,25 @@ export const useClientSearch = (clients: Client[]) => {
     const filteredClients = useMemo(() => {
         const term = searchTerm.toLowerCase();
 
-        const filtered = clients.filter(
-            (client) =>
-                client.name.toLowerCase().includes(term) ||
-                client.email.toLowerCase().includes(term) ||
-                client.phone.replace(/\s+/g, '').includes(term)
-        );
+        const filtered = clients.filter((client) => {
+            const fullName = `${client.firstName} ${client.lastName}`.toLowerCase();
+            const email = client.email.toLowerCase();
+            const phone = client.phone.replace(/\s+/g, '');
+
+            return fullName.includes(term) || email.includes(term) || phone.includes(term);
+        });
 
         filtered.sort((a, b) => {
-            const aStarts = a.name.toLowerCase().startsWith(term);
-            const bStarts = b.name.toLowerCase().startsWith(term);
+            const aFullName = `${a.firstName} ${a.lastName}`.toLowerCase();
+            const bFullName = `${b.firstName} ${b.lastName}`.toLowerCase();
+
+            const aStarts = aFullName.startsWith(term);
+            const bStarts = bFullName.startsWith(term);
 
             if (aStarts && !bStarts) return -1;
             if (!aStarts && bStarts) return 1;
 
-            return a.name.localeCompare(b.name);
+            return aFullName.localeCompare(bFullName);
         });
 
         return filtered;

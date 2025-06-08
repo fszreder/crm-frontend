@@ -22,6 +22,16 @@ export const HeaderSection = ({ onAddClientClick }: { onAddClientClick: () => vo
                 >
                     Zobacz listę klientów
                 </Button>
+                <Button
+                    className="hover:bg-gray-600 hover:text-white cursor-pointer transition-colors flex items-center gap-2"
+                    variant="outline"
+                    onClick={() => {
+                        localStorage.removeItem('token');
+                        navigate('/login');
+                    }}
+                >
+                    Wyloguj się
+                </Button>
             </div>
         </div>
     );

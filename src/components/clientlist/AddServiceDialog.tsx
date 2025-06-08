@@ -18,7 +18,7 @@ interface Props {
     onClose: () => void;
 }
 
-export const AddServiceDialog = ({ clientId, onAdd, nextId, onClose }: Props) => {
+export const AddServiceDialog = ({ onAdd, onClose }: Props) => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
@@ -70,12 +70,10 @@ export const AddServiceDialog = ({ clientId, onAdd, nextId, onClose }: Props) =>
         }
 
         const newService: Service = {
-            id: nextId,
             name,
-            description,
-            price: price,
-            clientId,
+            price: parseFloat(price),
             vehicleModel,
+            date: new Date().toISOString(),
         };
 
         onAdd(newService);

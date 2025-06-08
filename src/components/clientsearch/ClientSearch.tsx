@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input';
 import { ClientSearchResultCard } from './ClientSearchResultCard';
-import type { Client } from '@/data/mockClients';
+import type { Client } from '@/types/client';
 
 interface Props {
     searchTerm: string;
@@ -21,7 +21,7 @@ export const ClientSearch = ({ searchTerm, setSearchTerm, clients }: Props) => {
                 <div className="space-y-2">
                     {clients.length > 0 ? (
                         clients.map((client) => (
-                            <ClientSearchResultCard key={client.id} client={client} />
+                            <ClientSearchResultCard key={client._id} client={client} />
                         ))
                     ) : (
                         <p className="text-sm text-gray-500">Brak wyników.</p>

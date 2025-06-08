@@ -5,18 +5,62 @@ import { Routes, Route } from 'react-router-dom';
 import { HomePage } from '@/pages/homepage';
 import { Login } from '@/pages/Login';
 import { Toaster } from 'sonner';
+import { PrivateRoute } from '@/routes/PrivateRoute';
 
 function App() {
     return (
         <div className="p-8">
             <Routes>
-                <Route path="/" element={<Login />} />
-                <Route path="/homepage" element={<HomePage />} />
-                <Route path="/clientList" element={<ClientList />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/customers/new" element={<CustomerForm />} />
-                <Route path="/customers/:id" element={<CustomerDetail />} />
-                <Route path="/customers/:id/edit" element={<CustomerForm />} />
+
+                <Route
+                    path="/"
+                    element={
+                        <PrivateRoute>
+                            <HomePage />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/homepage"
+                    element={
+                        <PrivateRoute>
+                            <HomePage />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/clientList"
+                    element={
+                        <PrivateRoute>
+                            <ClientList />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/customers/new"
+                    element={
+                        <PrivateRoute>
+                            <CustomerForm />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/customers/:id"
+                    element={
+                        <PrivateRoute>
+                            <CustomerDetail />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/customers/:id/edit"
+                    element={
+                        <PrivateRoute>
+                            <CustomerForm />
+                        </PrivateRoute>
+                    }
+                />
             </Routes>
             <Toaster richColors position="top-right" closeButton />
         </div>

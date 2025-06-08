@@ -1,11 +1,15 @@
-export const fakeLogin = async (email: string, password: string) => {
-    return new Promise<{ token: string }>((resolve, reject) => {
-        setTimeout(() => {
-            if (email === 'admin@crm.com' && password === 'admin123') {
-                resolve({ token: 'fake-jwt-token' });
-            } else {
-                reject(new Error('Invalid credentials'));
-            }
-        }, 800);
-    });
-};
+import axios from 'axios';
+
+const api = axios.create({
+    baseURL: import.meta.env.VITE_API_URL,
+});
+
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
+export default api;

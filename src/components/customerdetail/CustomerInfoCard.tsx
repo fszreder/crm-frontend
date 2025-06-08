@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import type { Client } from '@/data/mockClients';
+import type { Client } from '@/types/client';
 
 interface Props {
     client: Client;
@@ -8,10 +8,14 @@ interface Props {
 export const CustomerInfoCard = ({ client }: Props) => (
     <Card>
         <CardContent className="p-4 space-y-2">
-            <h2 className="text-xl font-bold">{client.name}</h2>
+            <h2 className="text-xl font-bold">
+                {client.firstName} {client.lastName}
+            </h2>
             <p>Email: {client.email}</p>
             <p>Telefon: {client.phone}</p>
-            <p>Adres: {client.address}</p>
+            <p>
+                Adres: {client.address.street}, {client.address.zip} {client.address.city}
+            </p>
             <p>Notatki: {client.notes}</p>
         </CardContent>
     </Card>

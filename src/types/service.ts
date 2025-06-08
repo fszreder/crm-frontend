@@ -1,8 +1,6 @@
 export interface Service {
-    id: number;
     name: string;
-    description: string;
-    price: string;
-    clientId: number;
     vehicleModel: string;
+    price: number;
+    date: string;
 }
