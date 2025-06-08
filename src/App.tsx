@@ -5,9 +5,11 @@ import { Routes, Route } from 'react-router-dom';
 import { HomePage } from '@/pages/homepage';
 import { Login } from '@/pages/Login';
 import { Toaster } from 'sonner';
+import { useIdleLogout } from '@/hooks/useIdleLogout';
 import { PrivateRoute } from '@/routes/PrivateRoute';
 
 function App() {
+    useIdleLogout();
     return (
         <div className="p-8">
             <Routes>
