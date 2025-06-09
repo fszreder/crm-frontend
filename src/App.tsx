@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { Toaster } from 'sonner';
 
@@ -15,7 +15,6 @@ import { checkTokenValidity } from '@/lib/authService';
 function App() {
     const [isAuthChecked, setIsAuthChecked] = useState(false);
     const navigate = useNavigate();
-    const location = useLocation();
 
     useIdleLogout();
 
@@ -24,15 +23,13 @@ function App() {
             const isValid = await checkTokenValidity();
             if (!isValid) {
                 localStorage.removeItem('token');
-                if (location.pathname !== '/login') {
-                    navigate('/login');
-                }
+                navigate('login');
             }
             setIsAuthChecked(true);
         };
 
         verifyToken();
-    }, [location.pathname, navigate]);
+    }, [navigate]);
 
     if (!isAuthChecked) return null;
 
