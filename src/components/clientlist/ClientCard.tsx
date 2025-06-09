@@ -31,7 +31,7 @@ export const ClientCard = ({ client, onDetails, onDelete, onAddService }: Client
     return (
         <Card className="transition-colors duration-300 hover:bg-gray-100">
             <CardContent className="p-4 flex flex-col sm:flex-row sm:justify-between gap-4">
-                <div>
+                <div className="min-w-0 break-words w-full">
                     <div className="font-semibold text-lg">
                         {client.firstName} {client.lastName}
                     </div>
@@ -52,7 +52,7 @@ export const ClientCard = ({ client, onDetails, onDelete, onAddService }: Client
 
                 <div className="flex flex-col gap-2 w-full sm:w-auto">
                     <Button
-                        className="w-full sm:w-auto hover:bg-gray-600 hover:text-white cursor-pointer transition-colors"
+                        className="w-full hover:bg-gray-600 hover:text-white cursor-pointer transition-colors"
                         variant="outline"
                         onClick={() => onDetails(client._id)}
                     >
@@ -60,7 +60,7 @@ export const ClientCard = ({ client, onDetails, onDelete, onAddService }: Client
                     </Button>
 
                     <Button
-                        className="w-full sm:w-auto hover:bg-blue-600 hover:text-white cursor-pointer transition-colors"
+                        className="w-full hover:bg-blue-600 hover:text-white cursor-pointer transition-colors"
                         variant="outline"
                         onClick={() => onAddService(client._id)}
                     >
@@ -71,7 +71,7 @@ export const ClientCard = ({ client, onDetails, onDelete, onAddService }: Client
                         <AlertDialogTrigger asChild>
                             <Button
                                 variant="destructive"
-                                className="w-full sm:w-auto cursor-pointer bg-red-500 text-white hover:bg-red-600 flex items-center gap-2"
+                                className="w-full cursor-pointer bg-red-500 text-white hover:bg-red-600 flex items-center gap-2"
                             >
                                 <Trash2 size={16} />
                                 Usuń
@@ -84,11 +84,11 @@ export const ClientCard = ({ client, onDetails, onDelete, onAddService }: Client
                                 </AlertDialogTitle>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel className="w-full sm:w-auto hover:bg-gray-600 hover:text-white transition-colors cursor-pointer">
+                                <AlertDialogCancel className="w-full hover:bg-gray-600 hover:text-white transition-colors cursor-pointer">
                                     Anuluj
                                 </AlertDialogCancel>
                                 <AlertDialogAction
-                                    className="w-full sm:w-auto bg-red-500 text-white hover:bg-red-600 transition-colors cursor-pointer"
+                                    className="w-full bg-red-500 text-white hover:bg-red-600 transition-colors cursor-pointer"
                                     onClick={() => onDelete(client._id)}
                                 >
                                     Usuń
