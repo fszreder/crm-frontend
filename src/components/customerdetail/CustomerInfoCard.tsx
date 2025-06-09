@@ -7,7 +7,7 @@ interface Props {
 
 export const CustomerInfoCard = ({ client }: Props) => (
     <Card>
-        <CardContent className="p-4 space-y-2">
+        <CardContent className="min-w-0 break-words w-full">
             <h2 className="text-xl font-bold">
                 {client.firstName} {client.lastName}
             </h2>

@@ -57,7 +57,7 @@ const CustomerDetail = () => {
 
             <div className="flex gap-2 flex-wrap">
                 <Button
-                    className="w-full hover:bg-gray-600 cursor-pointer hover:text-white transition-colors flex items-center gap-2"
+                    className="w-full sm:w-auto hover:bg-gray-600 cursor-pointer hover:text-white transition-colors flex items-center gap-2"
                     onClick={handleBack}
                     variant="outline"
                 >
@@ -65,7 +65,7 @@ const CustomerDetail = () => {
                     Wróć do listy
                 </Button>
                 <Button
-                    className="w-full hover:bg-gray-600 cursor-pointer hover:text-white transition-colors flex items-center gap-2"
+                    className="w-full sm:w-auto hover:bg-gray-600 cursor-pointer hover:text-white transition-colors flex items-center gap-2"
                     onClick={handleEdit}
                     variant="outline"
                 >
@@ -76,7 +76,7 @@ const CustomerDetail = () => {
                 <Button
                     onClick={() => setShowDialog(true)}
                     variant="outline"
-                    className="w-full hover:bg-blue-600 cursor-pointer hover:text-white transition-colors flex items-center gap-2"
+                    className="w-full sm:w-auto hover:bg-blue-600 cursor-pointer hover:text-white transition-colors flex items-center gap-2"
                 >
                     ➕ Dodaj usługę
                 </Button>
@@ -85,7 +85,7 @@ const CustomerDetail = () => {
                     <AlertDialogTrigger asChild>
                         <Button
                             variant="destructive"
-                            className="w-full hover:bg-red-600 cursor-pointer bg-red-500 text-white flex items-center gap-2"
+                            className="w-full sm:w-auto hover:bg-red-600 cursor-pointer bg-red-500 text-white flex items-center gap-2"
                         >
                             <Trash2 size={16} />
                             Usuń klienta
