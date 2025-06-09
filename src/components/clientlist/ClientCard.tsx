@@ -52,7 +52,7 @@ export const ClientCard = ({ client, onDetails, onDelete, onAddService }: Client
 
                 <div className="flex flex-col gap-2 w-full sm:w-auto">
                     <Button
-                        className="hover:bg-gray-600 hover:text-white cursor-pointer transition-colors"
+                        className="w-full sm:w-auto hover:bg-gray-600 hover:text-white cursor-pointer transition-colors"
                         variant="outline"
                         onClick={() => onDetails(client._id)}
                     >
@@ -60,7 +60,7 @@ export const ClientCard = ({ client, onDetails, onDelete, onAddService }: Client
                     </Button>
 
                     <Button
-                        className="hover:bg-blue-600 hover:text-white cursor-pointer transition-colors"
+                        className="w-full sm:w-auto hover:bg-blue-600 hover:text-white cursor-pointer transition-colors"
                         variant="outline"
                         onClick={() => onAddService(client._id)}
                     >
@@ -71,7 +71,7 @@ export const ClientCard = ({ client, onDetails, onDelete, onAddService }: Client
                         <AlertDialogTrigger asChild>
                             <Button
                                 variant="destructive"
-                                className="cursor-pointer bg-red-500 text-white hover:bg-red-600 flex items-center gap-2"
+                                className="w-full sm:w-auto cursor-pointer bg-red-500 text-white hover:bg-red-600 flex items-center gap-2"
                             >
                                 <Trash2 size={16} />
                                 Usuń
@@ -84,11 +84,11 @@ export const ClientCard = ({ client, onDetails, onDelete, onAddService }: Client
                                 </AlertDialogTitle>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel className="hover:bg-gray-600 hover:text-white transition-colors cursor-pointer">
+                                <AlertDialogCancel className="w-full sm:w-auto hover:bg-gray-600 hover:text-white transition-colors cursor-pointer">
                                     Anuluj
                                 </AlertDialogCancel>
                                 <AlertDialogAction
-                                    className="bg-red-500 text-white hover:bg-red-600 transition-colors cursor-pointer"
+                                    className="w-full sm:w-auto bg-red-500 text-white hover:bg-red-600 transition-colors cursor-pointer"
                                     onClick={() => onDelete(client._id)}
                                 >
                                     Usuń
