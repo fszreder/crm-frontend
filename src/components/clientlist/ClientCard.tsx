@@ -84,11 +84,11 @@ export const ClientCard = ({ client, onDetails, onDelete, onAddService }: Client
                                 </AlertDialogTitle>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                                <AlertDialogCancel className="w-full hover:bg-gray-600 hover:text-white transition-colors cursor-pointer">
+                                <AlertDialogCancel className="hover:bg-gray-600 hover:text-white transition-colors cursor-pointer">
                                     Anuluj
                                 </AlertDialogCancel>
                                 <AlertDialogAction
-                                    className="w-full bg-red-500 text-white hover:bg-red-600 transition-colors cursor-pointer"
+                                    className="bg-red-500 text-white hover:bg-red-600 transition-colors cursor-pointer"
                                     onClick={() => onDelete(client._id)}
                                 >
                                     Usuń
