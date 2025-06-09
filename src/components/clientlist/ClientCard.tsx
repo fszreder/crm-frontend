@@ -30,7 +30,7 @@ export const ClientCard = ({ client, onDetails, onDelete, onAddService }: Client
 
     return (
         <Card className="transition-colors duration-300 hover:bg-gray-100">
-            <CardContent className="p-4 flex justify-between items-center">
+            <CardContent className="p-4 flex flex-col sm:flex-row sm:justify-between gap-4">
                 <div>
                     <div className="font-semibold text-lg">
                         {client.firstName} {client.lastName}
@@ -50,7 +50,7 @@ export const ClientCard = ({ client, onDetails, onDelete, onAddService }: Client
                     )}
                 </div>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 w-full sm:w-auto">
                     <Button
                         className="hover:bg-gray-600 hover:text-white cursor-pointer transition-colors"
                         variant="outline"
