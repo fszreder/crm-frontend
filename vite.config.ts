@@ -12,7 +12,7 @@ export default defineConfig({
         viteStaticCopy({
             targets: [
                 {
-                    src: path.resolve(__dirname, 'public/_redirects'),
+                    src: 'public/_redirects',
                     dest: '.',
                 },
             ],
