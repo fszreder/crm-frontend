@@ -5,6 +5,7 @@ import { login, register } from '@/lib/authService';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -12,6 +13,7 @@ export const Login = () => {
     const [error, setError] = useState('');
     const [isRegistering, setIsRegistering] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e?: React.FormEvent) => {
         if (e) e.preventDefault();
@@ -25,7 +27,7 @@ export const Login = () => {
             } else {
                 const res = await login(email, password);
                 localStorage.setItem('token', res.token);
-                window.location.href = '/homepage';
+                navigate('homepage');
             }
         } catch (err) {
             if (axios.isAxiosError(err)) {
