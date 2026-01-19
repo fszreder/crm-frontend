@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getCustomerById } from '@/lib/customerService';
+import { getCustomerById, deleteCustomer } from '@/lib/customerService';
 import type { Client } from '@/types/client';
-import { deleteCustomer } from '@/lib/customerService';
 import { toast } from 'sonner';
 
 export const useClientDetail = () => {
@@ -10,23 +9,43 @@ export const useClientDetail = () => {
     const navigate = useNavigate();
 
     const [client, setClient] = useState<Client | null>(null);
+    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        if (id) {
-            getCustomerById(id)
-                .then(setClient)
-                .catch(() => {
-                    console.error('Nie udało się pobrać klienta');
-                    navigate('/clientList');
-                });
-        }
+    const fetchClient = useCallback(() => {
+        if (!id) return;
+
+        setLoading(true);
+
+        getCustomerById(id)
+            .then((data) => {
+                if (data && typeof data === 'object') {
+                    setClient(data);
+                } else {
+                    throw new Error('Zły format danych');
+                }
+            })
+            .catch(() => {
+                toast.error('Nie udało się pobrać klienta');
+                navigate('/clientList');
+            })
+            .finally(() => {
+                setLoading(false);
+            });
     }, [id, navigate]);
 
+    useEffect(() => {
+        fetchClient();
+    }, [fetchClient]);
+
     const handleDelete = async () => {
-        if (client) {
+        if (!client) return;
+
+        try {
             await deleteCustomer(client._id);
             toast.success('Klient został usunięty');
             navigate('/clientList');
+        } catch {
+            toast.error('Nie udało się usunąć klienta');
         }
     };
 
@@ -40,8 +59,10 @@ export const useClientDetail = () => {
 
     return {
         client,
+        loading,
         handleDelete,
         handleEdit,
         handleBack,
+        refetch: fetchClient,
     };
 };

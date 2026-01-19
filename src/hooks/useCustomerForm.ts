@@ -1,7 +1,46 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import { getCustomerById, createCustomer, updateCustomer } from '@/lib/customerService';
+import type { Client } from '@/types/client';
+
+type FormData = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    countryCode: string;
+    rawPhone: string;
+    street: string;
+    city: string;
+    zip: string;
+    notes: string;
+};
+
+type FormErrors = {
+    firstName: string;
+    lastName: string;
+    email: string;
+    rawPhone: string;
+};
+
+const initialForm: FormData = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    countryCode: '+48',
+    rawPhone: '',
+    street: '',
+    city: '',
+    zip: '',
+    notes: '',
+};
+
+const initialErrors: FormErrors = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    rawPhone: '',
+};
 
 export const useCustomerForm = () => {
     const { id } = useParams();
@@ -10,49 +49,48 @@ export const useCustomerForm = () => {
 
     const isEditing = Boolean(id);
 
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        countryCode: '+48',
-        rawPhone: '',
-        street: '',
-        city: '',
-        zip: '',
-        notes: '',
-    });
+    const [formData, setFormData] = useState<FormData>(initialForm);
+    const [formErrors, setFormErrors] = useState<FormErrors>(initialErrors);
+    const [loading, setLoading] = useState(false);
 
-    const [formErrors, setFormErrors] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-        rawPhone: '',
-    });
+    const fetchCustomer = useCallback(async () => {
+        if (!id) return;
+
+        try {
+            setLoading(true);
+            const client: Client = await getCustomerById(id);
+
+            if (!client || typeof client !== 'object') {
+                throw new Error('Zły format danych');
+            }
+
+            const code = client.phone.slice(0, 3);
+            const raw = client.phone.slice(3);
+
+            setFormData({
+                firstName: client.firstName ?? '',
+                lastName: client.lastName ?? '',
+                email: client.email ?? '',
+                countryCode: code || '+48',
+                rawPhone: raw || '',
+                street: client.address?.street ?? '',
+                city: client.address?.city ?? '',
+                zip: client.address?.zip ?? '',
+                notes: client.notes ?? '',
+            });
+        } catch {
+            toast.error('Nie udało się pobrać klienta');
+            navigate('/clientList');
+        } finally {
+            setLoading(false);
+        }
+    }, [id, navigate]);
 
     useEffect(() => {
-        if (id) {
-            getCustomerById(id).then((client) => {
-                if (client) {
-                    const code = client.phone.slice(0, 3);
-                    const raw = client.phone.slice(3);
+        fetchCustomer();
+    }, [fetchCustomer]);
 
-                    setFormData({
-                        firstName: client.firstName,
-                        lastName: client.lastName,
-                        email: client.email,
-                        countryCode: code,
-                        rawPhone: raw,
-                        street: client.address.street,
-                        city: client.address.city,
-                        zip: client.address.zip,
-                        notes: client.notes,
-                    });
-                }
-            });
-        }
-    }, [id]);
-
-    const validateField = (name: string, value: string) => {
+    const validateField = (name: keyof FormErrors, value: string) => {
         switch (name) {
             case 'firstName':
             case 'lastName':
@@ -70,15 +108,39 @@ export const useCustomerForm = () => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
 
         if (name in formErrors) {
-            setFormErrors({ ...formErrors, [name]: validateField(name, value) });
+            setFormErrors((prev) => ({
+                ...prev,
+                [name]: validateField(name as keyof FormErrors, value),
+            }));
         }
+    };
+
+    const validateForm = () => {
+        const newErrors: FormErrors = {
+            firstName: validateField('firstName', formData.firstName),
+            lastName: validateField('lastName', formData.lastName),
+            email: validateField('email', formData.email),
+            rawPhone: validateField('rawPhone', formData.rawPhone),
+        };
+
+        setFormErrors(newErrors);
+        return Object.values(newErrors).every((err) => !err);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!validateForm()) {
+            toast.error('Popraw błędy w formularzu');
+            return;
+        }
 
         const fullPhone = `${formData.countryCode}${formData.rawPhone.trim()}`;
 
@@ -96,6 +158,8 @@ export const useCustomerForm = () => {
         };
 
         try {
+            setLoading(true);
+
             if (isEditing && id) {
                 await updateCustomer(id, newClient);
                 toast.success('Klient zaktualizowany');
@@ -109,6 +173,8 @@ export const useCustomerForm = () => {
         } catch (err) {
             toast.error('Błąd zapisu klienta');
             console.error(err);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -119,7 +185,9 @@ export const useCustomerForm = () => {
 
     return {
         formData,
+        formErrors,
         isEditing,
+        loading,
         handleChange,
         handleSubmit,
         handleCancel,

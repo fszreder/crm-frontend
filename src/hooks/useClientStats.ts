@@ -6,8 +6,10 @@ interface ChartDataPoint {
     count: number;
 }
 
-export const useClientStats = (clients: Client[]) => {
-    const clientsWithDates = clients.map((client) => ({
+export const useClientStats = (clients: Client[] | undefined) => {
+    const safeClients = Array.isArray(clients) ? clients : [];
+
+    const clientsWithDates = safeClients.map((client) => ({
         ...client,
         createdAt: parseISO(client.createdAt),
     }));

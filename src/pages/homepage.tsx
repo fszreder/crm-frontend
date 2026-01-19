@@ -18,7 +18,7 @@ export const HomePage = () => {
     useEffect(() => {
         getCustomers()
             .then(setClients)
-            .catch((err: unknown) => console.error('Błąd ładowania klientów', err));
+            .catch((err) => console.error('Błąd ładowania klientów', err));
     }, []);
 
     const navigate = useNavigate();

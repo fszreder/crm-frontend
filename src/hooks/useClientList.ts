@@ -17,7 +17,10 @@ export const useClientList = () => {
 
     const refetchClients = useCallback(() => {
         getCustomers()
-            .then(setClients)
+            .then((data) => {
+                const safe = Array.isArray(data) ? data : [];
+                setClients(safe);
+            })
             .catch(() => toast.error('Nie udało się pobrać klientów'));
     }, []);
 
@@ -26,7 +29,7 @@ export const useClientList = () => {
     }, [refetchClients]);
 
     const handleDelete = (id: string) => {
-        setClients((prev) => prev.filter((c) => c._id !== id));
+        setClients((prev) => (Array.isArray(prev) ? prev : []).filter((c) => c._id !== id));
         toast.success('Klient został usunięty');
     };
 
@@ -37,10 +40,11 @@ export const useClientList = () => {
     };
 
     const filteredAndSortedClients = useMemo(() => {
+        const safeClients = Array.isArray(clients) ? clients : [];
         const search = searchTerm.toLowerCase();
         const now = new Date();
 
-        const filtered = clients.filter((client) => {
+        const filtered = safeClients.filter((client) => {
             const fullName = `${client.firstName} ${client.lastName}`.toLowerCase();
             const matchName = fullName.includes(search);
 
